@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Food {
   final String id;
   final String name;
@@ -6,21 +8,28 @@ class Food {
   final DateTime? expiryDate;
 
   const Food({
-    required this.id,
     required this.name,
     required this.description,
     this.imagePath,
     this.expiryDate,
+    this.id = '',
   });
 
-  factory Food.fromFirestore(Map<String, dynamic> firestore) => Food(
-      id: firestore['id'],
-      name: firestore['name'],
-      description: firestore['description'],
-      expiryDate: firestore['expiryDate'].toDate());
+  factory Food.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot,
+      SnapshotOptions? options,) {
+    final data = snapshot.data();
+    if (data == null) {
+      throw ArgumentError('Firestore data cannot be null');
+    }
+    print(data);
+    return Food(
+      id: snapshot.id,
+      name: data['name'],
+      description: data['description'],
+      expiryDate: data['expiryDate'].toDate());
+  }
 
   Map<String, dynamic> toFirestore() => {
-        'id': id,
         'name': name,
         'expiryDate': expiryDate,
         'description': description,
