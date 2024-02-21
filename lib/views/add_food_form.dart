@@ -14,7 +14,7 @@ class _AddFoodFormState extends State<AddFoodForm> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
-  DateTime? _expiryDate;
+  final _expiryDateController = TextEditingController();
   final FoodService _foodService = FoodService();
 
   @override
@@ -24,85 +24,100 @@ class _AddFoodFormState extends State<AddFoodForm> {
     super.dispose();
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+  Future<void> _selectDate() async {
+    final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: _expiryDate ?? DateTime.now(),
+      initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2030),
     );
-    if (picked != null && picked != _expiryDate) {
+    if (pickedDate != null) {
       setState(() {
-        _expiryDate = picked;
+        _expiryDateController.text = pickedDate.toIso8601String();
       });
     }
   }
 
-  Future<void> _submitForm() async {
+  void _submitForm(BuildContext buildContext) async {
     if (_formKey.currentState!.validate()) {
       // Create a new Food item
       Food newFood = Food(
         name: _nameController.text,
         description: _descriptionController.text,
-        expiryDate: _expiryDate,
+        expiryDate: _expiryDateController.text.isNotEmpty
+            ? DateTime.parse(_expiryDateController.text)
+            : null,
       );
 
       await _foodService.addFood(newFood);
 
       // Clear the form
       _formKey.currentState!.reset();
-      _expiryDate = null;
 
       const snackBar = SnackBar(
         content: Text('Food added successfully!'),
       );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      Navigator.pop(context);
+      if (!buildContext.mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(buildContext).showSnackBar(snackBar);
+      Navigator.pop(buildContext);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            controller: _nameController,
-            decoration: const InputDecoration(labelText: 'Name'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter the food\'s name';
-              }
-              return null;
-            },
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text("FridegSpy"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(labelText: 'Name'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the food\'s name';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(labelText: 'Description'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a description';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _expiryDateController,
+                decoration: const InputDecoration(
+                    labelText: 'Expiry Date',
+                    filled: true,
+                    prefixIcon: Icon(Icons.calendar_today)),
+                readOnly: true,
+                onTap: () => _selectDate(),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: ElevatedButton(
+                  onPressed: () => _submitForm(context),
+                  child: const Text('Submit'),
+                ),
+              ),
+            ],
           ),
-          TextFormField(
-            controller: _descriptionController,
-            decoration: const InputDecoration(labelText: 'Description'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a description';
-              }
-              return null;
-            },
-          ),
-          ListTile(
-            title: Text(_expiryDate == null
-                ? 'No Date Chosen'
-                : 'Expiry Date: ${_expiryDate!.toIso8601String().split('T').first}'),
-            trailing: const Icon(Icons.calendar_today),
-            onTap: () => _selectDate(context),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: ElevatedButton(
-              onPressed: _submitForm,
-              child: const Text('Submit'),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

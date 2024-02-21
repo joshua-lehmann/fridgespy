@@ -40,7 +40,7 @@ class _NavigationState extends State<Navigation> {
         ),
         body: <Widget>[
           const Home(),
-          const FoodList(),
+          FoodList(),
         ][currentPageIndex]);
   }
 }

@@ -15,18 +15,19 @@ class Food {
     this.id = '',
   });
 
-  factory Food.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot,
-      SnapshotOptions? options,) {
+  factory Food.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
     final data = snapshot.data();
     if (data == null) {
       throw ArgumentError('Firestore data cannot be null');
     }
-    print(data);
     return Food(
-      id: snapshot.id,
-      name: data['name'],
-      description: data['description'],
-      expiryDate: data['expiryDate'].toDate());
+        id: snapshot.id,
+        name: data['name'],
+        description: data['description'],
+        expiryDate: data['expiryDate'].toDate());
   }
 
   Map<String, dynamic> toFirestore() => {

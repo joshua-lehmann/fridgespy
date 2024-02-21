@@ -11,10 +11,18 @@ class FoodService {
           toFirestore: (food, _) => food.toFirestore());
 
   Stream<QuerySnapshot<Food>> getFoods() {
-     return _foodCollection.snapshots();
+    return _foodCollection.snapshots();
+  }
+
+  Stream<QuerySnapshot<Food>> getFoodsOrderByExpiryDate() {
+    return _foodCollection.orderBy("expiryDate").snapshots();
   }
 
   Future<void> addFood(Food food) async {
     await _foodCollection.add(food);
+  }
+
+  Future<void> deleteFood(String id) async {
+    await _foodCollection.doc(id).delete();
   }
 }
