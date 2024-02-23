@@ -97,13 +97,19 @@ class _AddFoodFormState extends ConsumerState<AddFoodForm> {
     final barcode = _barcodeController.text;
     final foodRepoProduct = barcode.isNotEmpty
         ? ref.watch(foodRepoProductProvider(barcode))
-        : const AsyncValue.data(
-            null); // Assuming you have a default empty constructor
+        : const AsyncValue.data(null);
 
     if (foodRepoProduct is AsyncData) {
       final value = foodRepoProduct.value;
       if (value != null) {
-        _nameController.text = value.displayNameDe;
+        int indexOfDash = value.displayNameDe.indexOf('-');
+        if (indexOfDash != -1) {
+          _nameController.text = value.displayNameDe.substring(0, indexOfDash);
+          _descriptionController.text =
+              value.displayNameDe.substring(indexOfDash + 1);
+        } else {
+          _nameController.text = value.displayNameDe;
+        }
       }
     }
 

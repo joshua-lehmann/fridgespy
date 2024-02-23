@@ -51,8 +51,7 @@ class FoodList extends StatelessWidget {
                       children: [
                         Text(
                           food.name,
-                          style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 18),
                         ),
                         const SizedBox(height: 8),
                         Text(food.description),
