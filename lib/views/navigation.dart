@@ -35,6 +35,7 @@ class _NavigationState extends State<Navigation> {
           ],
         ),
         appBar: AppBar(
+          elevation: 2,
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text("FridegSpy"),
         ),
