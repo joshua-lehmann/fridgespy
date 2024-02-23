@@ -5,13 +5,13 @@ class Food {
   final String name;
   final String description;
   final String? imagePath;
-  final DateTime? expiryDate;
+  final DateTime expiryDate;
 
   const Food({
     required this.name,
     required this.description,
     this.imagePath,
-    this.expiryDate,
+    required this.expiryDate,
     this.id = '',
   });
 

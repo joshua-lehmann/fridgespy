@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fridgespy/models/food.dart';
 import 'package:fridgespy/services/food_service.dart';
 
+import '../services/date_service.dart';
 import 'add_food_form.dart';
 
 class FoodList extends StatelessWidget {
@@ -40,7 +41,8 @@ class FoodList extends StatelessWidget {
               itemCount: foodList.length,
               itemBuilder: (context, index) {
                 Food food = foodList[index].data();
-                print("$index + ${food.name}");
+                bool isExpiringSoon =
+                    DateService.isInNext3DaysOrPast(food.expiryDate);
                 return Card(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -58,7 +60,16 @@ class FoodList extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                                'Expiry Date: ${food.expiryDate!.day}.${food.expiryDate?.month}.${food.expiryDate?.year}'),
+                              'Expiry Date: ${DateService.getFormattedDateString(food.expiryDate)}',
+                            ),
+                            isExpiringSoon
+                                ? Text(
+                                    "Expires in ${DateService.getDaysUntilExpiry(food.expiryDate)} days",
+                                    style: const TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                : const SizedBox.shrink(),
                             IconButton(
                               icon: const Icon(Icons.delete),
                               onPressed: () => _foodService.deleteFood(food.id),
