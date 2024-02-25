@@ -23,5 +23,9 @@ Future<FoodRepoProduct?> foodRepoProduct(
     },
   );
   final json = jsonDecode(response.body) as Map<String, dynamic>;
+  if (json['data'].isEmpty || json['data'][0] == null) {
+    // If Api returns no products for a barcode, return null
+    return Future.value(null);
+  }
   return FoodRepoProduct.fromJson(json);
 }

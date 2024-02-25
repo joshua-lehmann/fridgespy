@@ -32,7 +32,7 @@ class _FoodListState extends ConsumerState<FoodList> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const AddFoodForm()),
+          MaterialPageRoute(builder: (context) => const AddFoodForm(null)),
         ),
         child: const Icon(Icons.add),
       ),

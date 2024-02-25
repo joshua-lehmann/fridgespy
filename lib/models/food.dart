@@ -6,6 +6,7 @@ class Food {
   final String description;
   final String? imagePath;
   final DateTime expiryDate;
+  final String? barcode;
 
   const Food({
     required this.name,
@@ -13,6 +14,7 @@ class Food {
     this.imagePath,
     required this.expiryDate,
     this.id = '',
+    this.barcode,
   });
 
   factory Food.fromFirestore(
@@ -27,12 +29,16 @@ class Food {
         id: snapshot.id,
         name: data['name'],
         description: data['description'],
-        expiryDate: data['expiryDate'].toDate());
+        expiryDate: data['expiryDate'].toDate(),
+        imagePath: data['imagePath'],
+        barcode: data['barcode']);
   }
 
   Map<String, dynamic> toFirestore() => {
         'name': name,
-        'expiryDate': expiryDate,
         'description': description,
+        'expiryDate': expiryDate,
+        "imagePath": imagePath,
+        "barcode": barcode,
       };
 }
