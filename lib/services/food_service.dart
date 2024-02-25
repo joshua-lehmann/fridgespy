@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fridgespy/models/food.dart';
+import 'package:fridgespy/services/date_service.dart';
 import 'package:fridgespy/services/firebase_service.dart';
 
 class FoodService {
@@ -16,6 +17,15 @@ class FoodService {
 
   Stream<QuerySnapshot<Food>> getFoodsOrderByExpiryDate() {
     return _foodCollection.orderBy("expiryDate").snapshots();
+  }
+
+  Stream<QuerySnapshot<Food>> getFoodExpiringSoon(int inDays) {
+    var inThreeDays = Timestamp.fromDate(DateService.xDaysFromNow(inDays));
+
+    return _foodCollection
+        .where("expiryDate", isLessThan: inThreeDays)
+        .orderBy("expiryDate")
+        .snapshots();
   }
 
   Future<void> addFood(Food food) async {

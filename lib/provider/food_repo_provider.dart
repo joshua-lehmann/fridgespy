@@ -22,9 +22,6 @@ Future<FoodRepoProduct?> foodRepoProduct(
       'Authorization': 'Bearer ${dotenv.env['FOOD_REPO_TOKEN']}',
     },
   );
-  // Using dart:convert, we then decode the JSON payload into a Map data structure.
   final json = jsonDecode(response.body) as Map<String, dynamic>;
-  print("response: $json");
-  // Finally, we convert the Map into an FoodRepoProduct instance.
   return FoodRepoProduct.fromJson(json);
 }

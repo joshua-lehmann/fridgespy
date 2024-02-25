@@ -7,12 +7,9 @@ class DateService {
   static bool isInNext3DaysOrPast(DateTime dateToCheck) {
     DateTime now = DateTime.now();
     DateTime currentDate = DateTime(now.year, now.month, now.day);
-    DateTime threeDaysFromNow =
-        currentDate.add(const Duration(days: 3)); // Date 3 days from now
 
     // Check if target date is in the past or within the next 3 days
-    return dateToCheck
-            .isBefore(threeDaysFromNow.add(const Duration(days: 1))) ||
+    return dateToCheck.isBefore(xDaysFromNow(3).add(const Duration(days: 1))) ||
         dateToCheck.isBefore(currentDate.add(const Duration(days: 1)));
   }
 
@@ -20,5 +17,12 @@ class DateService {
     DateTime now = DateTime.now();
     DateTime currentDate = DateTime(now.year, now.month, now.day);
     return expiryDate.difference(currentDate).inDays;
+  }
+
+  static xDaysFromNow(int days) {
+    DateTime now = DateTime.now();
+    DateTime currentDate = DateTime(now.year, now.month, now.day);
+    DateTime xDaysFromNow = currentDate.add(Duration(days: days));
+    return xDaysFromNow;
   }
 }

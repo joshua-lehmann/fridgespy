@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fridgespy/services/barcode_service.dart';
 
 import '../models/food.dart';
 import '../provider/food_repo_provider.dart';
+import '../services/barcode_service.dart';
 import '../services/date_service.dart';
 import '../services/food_service.dart';
 
@@ -63,7 +63,6 @@ class _AddFoodFormState extends ConsumerState<AddFoodForm> {
     if (barcode.isNotEmpty && barcode != '-1') {
       _barcodeController.text = barcode;
     }
-    print('my barcode: $barcode');
   }
 
   void _submitForm(BuildContext buildContext) async {
@@ -178,7 +177,7 @@ class _AddFoodFormState extends ConsumerState<AddFoodForm> {
                       : const Text('No product found'),
                   AsyncError(:final error) =>
                     Text('Error: ${error.toString()}'),
-                  _ => const CircularProgressIndicator(),
+                  _ => const Center(child: CircularProgressIndicator()),
                 }),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
