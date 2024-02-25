@@ -32,6 +32,11 @@ class FoodService {
     await _foodCollection.add(food);
   }
 
+  Future<void> updateFood(Food food) async {
+    final existingFood = _foodCollection.doc(food.id);
+    await existingFood.update(food.toFirestore());
+  }
+
   Future<void> deleteFood(String id) async {
     await _foodCollection.doc(id).delete();
   }

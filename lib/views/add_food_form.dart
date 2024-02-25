@@ -87,6 +87,7 @@ class _AddFoodFormState extends ConsumerState<AddFoodForm> {
       _formKey.currentState!.save();
       // Create a new Food item
       Food newFood = Food(
+        id: widget.food?.id ?? '',
         name: _nameController.text,
         description: _descriptionController.text,
         expiryDate: DateTime.parse(_expiryDate),
@@ -94,17 +95,29 @@ class _AddFoodFormState extends ConsumerState<AddFoodForm> {
         imagePath: _imageUrl,
       );
 
-      _foodService.addFood(newFood);
+      SnackBar snackBar;
 
-      // Clear the form
-      _formKey.currentState!.reset();
+      if (newFood.id.isNotEmpty) {
+        _foodService.updateFood(newFood);
+        snackBar = const SnackBar(
+          content: Text('Food updated successfully!'),
+        );
+      } else {
+        _foodService.addFood(newFood);
 
-      const snackBar = SnackBar(
-        content: Text('Food added successfully!'),
-      );
+        snackBar = const SnackBar(
+          content: Text('Food added successfully!'),
+        );
+      }
       if (!buildContext.mounted) {
         return;
       }
+
+      if (!buildContext.mounted) {
+        return;
+      }
+      // Clear the form
+      _formKey.currentState!.reset();
       ScaffoldMessenger.of(buildContext).showSnackBar(snackBar);
       Navigator.pop(buildContext);
     }
