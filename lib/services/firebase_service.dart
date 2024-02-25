@@ -11,6 +11,4 @@ class FirebaseService {
   FirebaseService._internal() {
     firestore = FirebaseFirestore.instance;
   }
-
-// Define your Firebase methods here
 }
